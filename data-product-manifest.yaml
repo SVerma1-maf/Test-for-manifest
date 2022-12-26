@@ -8,7 +8,7 @@ discoveryPort:
   description: 'A daliy updated product about CRF customer data. It consist of more than 20M records integrated from 5 different sources A daliy updated product about CRF customer data. It consist of more than 20M records integrated from 5 different sources A daliy updated product about CRF customer data. It consist of more than 20M records integrated from 5 different sources A daliy updated product about CRF customer data. It consist of more than 20M records integrated from 5 different sourcesA daliy updated product about CRF customer data. It consist of more than 20M records integrated from 5 different sourcesA daliy updated product about CRF customer data. It consist of more than 20M records integrated from 5 different sourcesA daliy updated product about CRF customer data. It consist of more than 20M records integrated from 5 different sources'
   category: string
   autofillUserinfo: true
-  tags: []
+  tags: ['Shubham', 'Manifest', 'test', 'tags']
   extra: {}
 
 inputPorts:
