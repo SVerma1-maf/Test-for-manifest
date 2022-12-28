@@ -4,7 +4,6 @@
 version: '0.0.1'
 
 discoveryPort:
-  name: 'CFR customer data Shubham'
   description: 'A daliy updated product about CRF customer data. It consist of more than 20M records integrated from 5 different sources A daliy updated product about CRF customer data. It consist of more than 20M records integrated from 5 different sources A daliy updated product about CRF customer data. It consist of more than 20M records integrated from 5 different sources A daliy updated product about CRF customer data. It consist of more than 20M records integrated from 5 different sourcesA daliy updated product about CRF customer data. It consist of more than 20M records integrated from 5 different sourcesA daliy updated product about CRF customer data. It consist of more than 20M records integrated from 5 different sourcesA daliy updated product about CRF customer data. It consist of more than 20M records integrated from 5 different sources'
   category: string
   autofillUserinfo: true
@@ -17,7 +16,6 @@ inputPorts:
     tags: []
     extra: {}
     syncType: 'pull'
-    type: 's3'
     sourceUrn: 'urn:dv:datasource:crf-customers-6d4714c3'
     entityId:
       alias: 'customers'
