@@ -7,12 +7,12 @@ discoveryPort:
   category: customer
   image: http://www.google.com
   autofillUserinfo: true
-  tags: []
+  tags: [review, test, manifest, 2023]
   extra: {}
 inputPorts:
 - alias: mafh-analytics-data-ingestion
   description: string
-  tags: [review, test, manifest, 2023]
+  tags: []
   extra: {}
   syncType: pull
   type: s3
