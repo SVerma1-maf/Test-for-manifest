@@ -7,7 +7,7 @@ discoveryPort:
   category: customer
   image: http://www.google.com
   autofillUserinfo: true
-  tags: [ 2023, review, shubham]
+  tags: [review, shubham]
   extra: {}
 inputPorts:
 - alias: mafh-analytics-data-ingestion
