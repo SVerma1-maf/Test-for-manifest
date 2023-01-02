@@ -1,7 +1,7 @@
 # --- Data product definition template and documentation   --- #
 version: 0.0.1
 discoveryPort:
-  name: Shubham Review Product
+  name: Shubham Review Product version 2
   description: A daliy updated product about CRF customer data. It consist of more
     than 20M records integrated from 5 different sources
   category: customer
@@ -12,7 +12,7 @@ discoveryPort:
 inputPorts:
 - alias: mafh-analytics-data-ingestion
   description: string
-  tags: []
+  tags: [review, test, manifest, 2023]
   extra: {}
   syncType: pull
   type: s3
