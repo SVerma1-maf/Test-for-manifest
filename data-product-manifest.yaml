@@ -50,7 +50,7 @@ stateManagement:
   updateStrategy: SCD-2
   productStoreState:
    logicalSchemaUrn: urn:dv:schema:532fd34e-b22a-4ac5-856f-9bb6f1498755
-    retentionVersions: "10"
+   retentionVersions: "10"
   updateStrategyOptions:
     - entityRef: ${urn:dv:datasource:6d4714c3}:1
       uniqueKeyColumns:
