@@ -1,7 +1,7 @@
 ---
-version: 0.0.1
+version: 0.0.3
 discoveryPort:
-  name: Test consumption channel
+  name: Test consumption channel logical schema
   description: The data product is to test whether consumption channels are returned by BE as in manifest.
   category: customer
   image: http://google.com
