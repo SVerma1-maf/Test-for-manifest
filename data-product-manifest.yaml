@@ -1,7 +1,7 @@
 ---
-version: 0.0.3
+version: 0.0.1
 discoveryPort:
-  name: Test consumption channel logical schema
+  name: Test consumption channel for manifest direct
   description: The data product is to test whether consumption channels are returned by BE as in manifest.
   category: customer
   image: http://google.com
@@ -46,11 +46,29 @@ inputPorts:
         - buy_price_by_area
 stateManagement:
   alias: users_count_by_gender
-  refreshInterval: 00 10 * * *
+  refreshInterval: 0 10 * * *
   updateStrategy: SCD-2
   productStoreState:
-   logicalSchemaUrn: urn:dv:schema:532fd34e-b22a-4ac5-856f-9bb6f1498755
-   retentionVersions: "10"
+    logicalSchema:
+      type: object
+      properties:
+        Name:
+          type: string
+          description: Name of the person
+        Gender:
+          type: string
+          enum:
+            - Male
+            - Female
+            - Unknown
+          description: Gender of the person. Possible values Male, Female and Unknown
+        Id:
+          type: number
+          description: Unique Identifier of the person
+      required:
+        - Name
+        - Id
+    retentionVersions: "10"
   updateStrategyOptions:
     - entityRef: ${urn:dv:datasource:6d4714c3}:1
       uniqueKeyColumns:
@@ -69,3 +87,17 @@ outputPort:
     queryType: SQL
   - channelType: JDBC
     queryType: SQL 
+Footer
+© 2023 GitHub, Inc.
+Footer navigation
+Terms
+Privacy
+Security
+Status
+Docs
+Contact GitHub
+Pricing
+API
+Training
+Blog
+About
