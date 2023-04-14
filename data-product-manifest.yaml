@@ -55,6 +55,7 @@ inputPorts:
         - marks
         - modified
 stateManagement:
+  retentionVersions: "10"
   alias: Test0001
   refreshInterval: 45 15 * * *
   updateStrategy: append
@@ -74,7 +75,6 @@ stateManagement:
           description: To store the creation date
       required:
         - id
-    retentionVersions: "10"
   updateStrategyOptions:
     uniqueKeyColumns:
       - id
