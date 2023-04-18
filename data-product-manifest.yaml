@@ -2,7 +2,7 @@
 version: 0.0.1
 discoveryPort:
   name: DPAsASource
-  description: Average car price in barcelona enityt
+  description: Average car price in barcelona
   category: customer
   image: http://google.com
   autofillUserinfo: true
