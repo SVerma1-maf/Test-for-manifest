@@ -1,89 +1,129 @@
 ---
 version: 0.0.1
 discoveryPort:
-  name: Test consumption channel for manifest direct
-  description: The data product is to test whether consumption channels are returned by BE as in manifest.
-  category: customer
-  image: http://google.com
-  autofillUserinfo: true
-  tags:
-    - RESTAPI
-    - JDBC
-  extra: {}
+  name: DPAsASource
+  description: Average car price in barcelona enityt
+  category: customer
+  image: http://google.com
+  autofillUserinfo: true
+  tags: []
+  extra: {}
 inputPorts:
-  - alias: usersS3_input_port
-    description: string
-    tags: []
-    extra: {}
-    syncType: pull
-    type: s3
-    sourceUrn: urn:dv:datasource:18896dde-fbf6-47f0-ab76-fb10ff9a47c4
-    entityId:
-      alias: usersS3
-      createEntity: true
-      entityName: houses_Madrid.parquet
-      type: s3-bucket
-      entityPath: s3a://dp-input-bucket/property_rental/houses_Madrid.parquet
-      entityFilterPatternMatch: "*"
-      sourceSchemaUrn: urn:dv:schema:9d4716d4
-      projectSchemaUrn: urn:dv:schema:9d4716d6
-      fileFormat: parquet
-      delimiter: "|"
-      filter: subtitle != ''
-      processingTimeColumn:
-        - processing_time
-      actualTimeColumn:
-        - processing_time
-      projection:
-        - id
-        - title
-        - subtitle
-        - sq_mt_built
-        - sq_mt_useful
-        - rent_price
-        - rent_price_by_area
-        - buy_price
-        - buy_price_by_area
+  - alias: car_input_port
+    description: string
+    tags: []
+    extra: {}
+    syncType: pull
+    type: s3
+    sourceUrn: urn:dv:datasource:0ec70f7b-0691-4059-a0ee-e00a49c62542
+    entityId:
+      alias: car_prices
+      createEntity: true
+      type: s3-bucket
+      entityPath: s3://dp-input-bucket/mpay-tx/mpay-tx.csv
+      entityVariables:
+        - key: my_dynamic_year
+          value: date-YYYYMMdd
+      entityFilterPatternMatch: "*"
+      sourceSchemaUrn: urn:dv:schema:9d4716d4
+      projectSchemaUrn: urn:dv:schema:9d4716d6
+      fileFormat: csv
+      delimiter: ","
+      header: true
+      processingTimeColumn:
+        - processing_time
+      actualTimeColumn:
+        - processing_time
+      projection:
+        - legal_entity
+        - store_name
+        - amount
+        - payment_option
+        - currency
+  - alias: data-product-as-source
+    description: string
+    tags: []
+    extra: {}
+    syncType: pull
+    type: dataproduct
+    dataProductUrn: urn:dv:dataproduct:012d3d01-a17a-4b4c-9b85-7d4e7862bb1d
+    filter: ""
+    projection:
+      - id
+      - name
+      - marks
+      - modified
 stateManagement:
-  alias: users_count_by_gender
-  refreshInterval: 0 10 * * *
-  updateStrategy: SCD-2
-  productStoreState:
-    logicalSchema:
-      type: object
-      properties:
-        Name:
-          type: string
-          description: Name of the person
-        Gender:
-          type: string
-          enum:
-            - Male
-            - Female
-            - Unknown
-          description: Gender of the person. Possible values Male, Female and Unknown
-        Id:
-          type: number
-          description: Unique Identifier of the person
-      required:
-        - Name
-        - Id
-    retentionVersions: "10"
-  updateStrategyOptions:
-    - entityRef: ${urn:dv:datasource:6d4714c3}:1
-      uniqueKeyColumns:
-        - customer_id
-      changeTrackColumns:
-        - cust_title_desc
-        - cust_birthday
-        - cust_nationality
+  alias: car_prices
+  refreshInterval: "*/10 * * * *"
+  updateStrategy: append
+  productStoreState:
+    logicalSchema:
+      properties:
+        legal_entity:
+          type: string
+        store_name:
+          type: string
+        amount:
+          type: int
+        payment_option:
+          type: string
+        currency:
+          type: string
+    retentionVersions: "10"
+  updateStrategyOptions:
+    entityRef: ${urn:dv:datasource:6d4714c3}:1
+    tags:
+      - test
 transformation:
-  sql: SELECT AVG(rent_price), house_type_id
-    FROM usersS3
-    GROUP BY house_type_id
-outputPort:
-  channels:
-  - channelType: REST-API
-    queryType: SQL
-  - channelType: JDBC
-    queryType: SQL 
+- alias: Transform 1
+  type: SQL
+  description: Join input1 and input2 to get the actual member name
+  query: select * from i1 inner join i2 on i1.id=i2.id
+  references:
+  - alias: input1
+    sqlReference: i1
+  - alias: input2
+    sqlReference: i2
+  - alias: input3input3input3input3input3input3input3input3input3input3
+    sqlReference: i2i2i2i2i2i2i2i2i2i2ii2i2i2i2i2i2i2i2i2i2i2i2i2i2ii2i2i2i2i2i2i2i2i2i2i2i2i2i2ii2i2i2i2i2i2i2i2i2i2i2i2i2i2ii2i2i2i2i2i2i2i2i2i2i2i2i2i2ii2i2i2i2
+- alias: Transform 2
+  type: SQL
+  description: Generate the sum of marks on a name level
+  query: select name,sum(marks) from t1 group by name
+  references:
+  - alias: input1
+    sqlReference: t1
+- alias: Transform 3
+  type: SQL
+  description: Generate the sum of marks on a name level
+  query: select name,sum(marks) from t1 group by name 
+dataQualityCheck:
+  RecordCountCheck:
+    inputPort:
+      - referenceAlias: car_prices
+        expression: "=="
+        number: 100
+    stateManagement:
+      referenceAlias: Test0001
+      expression: "=="
+      number: 100
+  NullValueCheck:
+    inputPort:
+      - referenceAlias: car_prices
+        checks:
+          - column: amount
+            expression: ">="
+            number: 0.9
+          - column: card_number
+            expression: ">="
+            number: 0.95
+          - column: auth_code
+            expression: ">="
+            number: 0.9
+    stateManagement:
+      referenceAlias: Test0001
+      checks:
+        - column: amount
+          expression: ">="
+          number: 0.9
