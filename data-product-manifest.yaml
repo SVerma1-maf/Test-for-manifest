@@ -32,17 +32,16 @@ inputPorts:
       projectSchemaUrn: urn:dv:schema:9d4716d6
       fileFormat: csv
       delimiter: ","
-      header: true
+      filter: ""
       processingTimeColumn:
-        - processing_time
-      actualTimeColumn:
-        - processing_time
-      projection:
-        - legal_entity
-        - store_name
-        - amount
-        - payment_option
-        - currency
+        - created_date
+      actualTimeColumn:
+        - created_date
+      projection:
+        - id
+        - name
+        - marks
+        - modified
 stateManagement:
   retentionVersions: "10"
   alias: Test0001
