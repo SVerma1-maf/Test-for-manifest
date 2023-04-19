@@ -43,19 +43,6 @@ inputPorts:
         - amount
         - payment_option
         - currency
-  - alias: data-product-as-source
-    description: string
-    tags: []
-    extra: {}
-    syncType: pull
-    type: dataproduct
-    dataProductUrn: urn:dv:dataproduct:012d3d01-a17a-4b4c-9b85-7d4e7862bb1d
-    filter: ""
-    projection:
-      - id
-      - name
-      - marks
-      - modified
 stateManagement:
   retentionVersions: "10"
   alias: Test0001
