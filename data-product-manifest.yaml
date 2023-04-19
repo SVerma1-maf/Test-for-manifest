@@ -1,13 +1,16 @@
 ---
 version: 0.0.1
 discoveryPort:
-  name: DPAsASource
-  description: Average car price in barcelona
-  category: customer
-  image: http://google.com
-  autofillUserinfo: true
-  tags: []
-  extra: {}
+  name: Data Product Data Quality Rules
+  description: Creating the base table
+  category: customer
+  alias: alias_de_do
+  image: http://google.com
+  autofillUserinfo: true
+  tags:
+    - Madrid
+    - House Rental
+  extra: {}
 inputPorts:
   - alias: car_input_port
     description: string
@@ -54,145 +57,65 @@ inputPorts:
       - marks
       - modified
 stateManagement:
-  alias: car_prices
-  refreshInterval: "*/10 * * * *"
-  updateStrategy: append
-  productStoreState:
-    logicalSchema:
-      properties:
-        legal_entity:
-          type: string
-        store_name:
-          type: string
-        amount:
-          type: int
-        payment_option:
-          type: string
-        currency:
-          type: string
-    retentionVersions: "10"
-  updateStrategyOptions:
-    entityRef: ${urn:dv:datasource:6d4714c3}:1
-    tags:
-      - test
+  retentionVersions: "10"
+  alias: Test0001
+  refreshInterval: 45 15 * * *
+  updateStrategy: append
+  productStoreState:
+    logicalSchema:
+      type: object
+      properties:
+        id:
+          type: number
+          description: ID of the property
+        name:
+          type: String
+        marks:
+          type: number
+        modified:
+          type: datetime
+          description: To store the creation date
+      required:
+        - id
+  updateStrategyOptions:
+    uniqueKeyColumns:
+      - id
+    changeTrackColumns:
+      - modified
 transformation:
-- alias: Transform 1
-  type: SQL
-  description: Join input1 and input2 to get the actual member name
-  query: select * from i1 inner join i2 on i1.id=i2.id
-  references:
-  - alias: input1
-    sqlReference: i1
-  - alias: input2
-    sqlReference: i2
-  - alias: input3input3input3input3input3input3input3input3input3input3
-    sqlReference: i2i2i2i2i2i2i2i2i2i2ii2i2i2i2i2i2i2i2i2i2i2i2i2i2ii2i2i2i2i2i2i2i2i2i2i2i2i2i2ii2i2i2i2i2i2i2i2i2i2i2i2i2i2ii2i2i2i2i2i2i2i2i2i2i2i2i2i2ii2i2i2i2
-- alias: Transform 2
-  type: SQL
-  description: Generate the sum of marks on a name level
-  query: select name,sum(marks) from t1 group by name
-  references:
-  - alias: input1
-    sqlReference: t1
-- alias: Transform 3
-  type: SQL
-  description: Generate the sum of marks on a name level
-  query: select name,sum(marks) from t1 group by name 
-dataQualityCheck:
-  RecordCountCheck:
-    inputPort:
-      - referenceAlias: car_prices
-        expression: "=="
-        number: 100
-    stateManagement:
-      referenceAlias: Test0001
-      expression: "=="
-      number: 100
-  NullValueCheck:
-    inputPort:
-      - referenceAlias: car_prices
-        checks:
-          - column: amount
-            expression: ">="
-            number: 0.9
-          - column: card_number
-            expression: ">="
-            number: 0.95
-          - column: auth_code
-            expression: ">="
-            number: 0.9
-    stateManagement:
-      referenceAlias: Test0001
-      checks:
-        - column: amount
-          expression: ">="
-          number: 0.9
-           UnacceptableTextValueCheck:
+  sql: SELECT * FROM Test0001
+outputPort:
+  channels:
+    - channelType: REST-API
+      queryType: SQL
+    - channelType: JDBC
+      queryType: SQL
+DataQualityCheck:
+  RecordCountCheck:
     inputPort:
-      - referenceAlias: Test0001_input_port
+      - referenceAlias: car_prices
+        expression: "=="
+        number: 100
+    stateManagement:
+      referenceAlias: Test0001
+      expression: "=="
+      number: 100
+  NullValueCheck:
+    inputPort:
+      - referenceAlias: car_prices
         checks:
-          - column: UnitOfMass
-            valueList:
-              - KG
-              - kg
-              - gm
-              - gram
-            number: 0.95
-            expression: <=
-          - column: UnitOfvolume
-            valueList:
-              - litre
-              - gallon
-              - barrel
-              - pint
+          - column: amount
+            expression: ">="
             number: 0.9
-            expression: <=
+          - column: card_number
+            expression: ">="
+            number: 0.95
+          - column: auth_code
+            expression: ">="
+            number: 0.9
     stateManagement:
       referenceAlias: Test0001
       checks:
-        - column: UnitOfLength
-          valueList:
-            - metres
-            - feet
-            - miles
-            - yards
+        - column: amount
+          expression: ">="
           number: 0.9
-          expression: <=
-  UniquenessCheck:
-    inputPort:
-      - referenceAlias: Test0001_input_port
-        checks:
-          - column: unique_key1
-          - column: unique_key2
-  UniqueCombinationCheck:
-    inputPort:
-      - referenceAlias: Test0001_input_port
-        checks:
-          - columns:
-              - colA
-              - colB
-          - columns:
-              - colC
-              - colD
-    stateManagement:
-      referenceAlias: Test0001
-      checks:
-        - columns:
-            - Primary1
-            - Primary2
-        - columns:
-            - Primary3
-            - Primary4
-  DistinctValueCountCheck:
-    inputPort:
-      - referenceAlias: Test0001_input_port
-        checks:
-          - column: CarCategory
-            number: 7
-            expression: <=
-    stateManagement:
-      referenceAlias: Test0001
-      checks:
-        - column: Gender
-          number: 4
-          expression: <=
