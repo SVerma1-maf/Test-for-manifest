@@ -4,6 +4,7 @@ discoveryPort:
   name: Data Product Data Quality Rules
   description: Creating the base table
   category: customer
+  alias: alias_de_do
   image: http://google.com
   autofillUserinfo: true
   tags:
