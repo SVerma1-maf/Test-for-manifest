@@ -6,6 +6,7 @@ discoveryPort:
   category: customer
   image: http://google.com
   autofillUserinfo: true
+  alias: alias chahiye
   tags:
     - Madrid
     - House Rental
