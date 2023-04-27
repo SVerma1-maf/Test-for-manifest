@@ -2,7 +2,8 @@
 version: 0.0.1
 discoveryPort:
   name: Test consumption channel for manifest direct
-  description: The data product is to test whether consumption channels are returned by BE as in manifest.
+  longDescription: The data product is to test whether consumption channels are returned by BE as in manifest.The data product is to test whether consumption channels are returned by BE as in manifest.
+  shortDescription: The data product is to test whether consumption channels are returned by BE as in manifest.
   category: customer
   image: http://google.com
   autofillUserinfo: true
