@@ -2,7 +2,8 @@
 version: 0.0.1
 discoveryPort:
   name: Data Product Data Quality Rules
-  description: Creating the base table
+  shortDescription: Creating the base table
+  longDescription: Data Product Data Quality RulesData Product Data Quality RulesData Product Data Quality RulesData Product Data Quality Ruless
   category: customer
   alias: alias_de_do
   image: http://google.com
