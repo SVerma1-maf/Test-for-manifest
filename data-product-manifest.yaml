@@ -1,7 +1,7 @@
 ---
 version: 0.0.1
 discoveryPort:
-  name: test shubh 
+  name: test shubh for scheduled DP
   alias: TestMultiTransform_01
   shortDescription: Test search functionality
   longDescription: search maximum characters for long description
@@ -70,7 +70,7 @@ inputPorts:
         - location
 stateManagement:
   alias: car_prices_barcelona
-  refreshInterval: 0/15 * * * *
+  refreshInterval: 0/5 * * * *
   updateStrategy: append
   productStoreState:
     logicalSchema:
