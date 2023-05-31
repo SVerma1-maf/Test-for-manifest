@@ -1,89 +1,150 @@
 ---
-version: 0.0.1
+version: 0.1.0
+alias: latest_file_testing_31_5_shubham
 discoveryPort:
-  name: Test consumption channel for manifest direct
-  description: The data product is to test whether consumption channels are returned by BE as in manifest.
-  category: customer
-  image: http://google.com
-  autofillUserinfo: true
+  name: Run data product test
+  alias: Test_schedule_run
+  shortDescription: Weather Forecast of the next 7 days for ahmedabad city
+  longDescription: Weather Forecast of the next 7 days for ahmedabad city along with the accuracy of the previous forecast
   tags:
-    - RESTAPI
-    - JDBC
-  extra: {}
+    - MAF Data
+    - Schedule Run
+  dataTimeRange:
+    fromMinDataDate: '2022-04-07'
+    toMinDataDate: '2022-04-14'
+    timeColumn: '2022-04-07'
+  industryDomain: Meteorology
+  function: Forecast
+  regulatoryFields:
+    dataPrivacy: public
+    customerInfo: nonPII
+    dataOrigin: machineGenerated
+    monetaryInfo: nonFinancialData
 inputPorts:
-  - alias: usersS3_input_port
+  - alias: Test_input_port
     description: string
+    type: s3-csv
     tags: []
-    extra: {}
     syncType: pull
-    type: s3
-    sourceUrn: urn:dv:datasource:18896dde-fbf6-47f0-ab76-fb10ff9a47c4
-    entityId:
-      alias: usersS3
-      createEntity: true
-      entityName: houses_Madrid.parquet
-      type: s3-bucket
-      entityPath: s3a://dp-input-bucket/property_rental/houses_Madrid.parquet
-      entityFilterPatternMatch: "*"
-      sourceSchemaUrn: urn:dv:schema:9d4716d4
-      projectSchemaUrn: urn:dv:schema:9d4716d6
-      fileFormat: parquet
-      delimiter: "|"
-      filter: subtitle != ''
-      processingTimeColumn:
-        - processing_time
-      actualTimeColumn:
-        - processing_time
-      projection:
-        - id
-        - title
-        - subtitle
-        - sq_mt_built
-        - sq_mt_useful
-        - rent_price
-        - rent_price_by_area
-        - buy_price
-        - buy_price_by_area
-stateManagement:
-  alias: users_count_by_gender
-  refreshInterval: 0 10 * * *
-  updateStrategy: SCD-2
-  productStoreState:
-    logicalSchema:
-      type: object
-      properties:
-        Name:
-          type: string
-          description: Name of the person
-        Gender:
-          type: string
-          enum:
-            - Male
-            - Female
-            - Unknown
-          description: Gender of the person. Possible values Male, Female and Unknown
-        Id:
-          type: number
-          description: Unique Identifier of the person
-      required:
-        - Name
-        - Id
-    retentionVersions: "10"
-  updateStrategyOptions:
-    - entityRef: ${urn:dv:datasource:6d4714c3}:1
-      uniqueKeyColumns:
-        - customer_id
-      changeTrackColumns:
-        - cust_title_desc
-        - cust_birthday
-        - cust_nationality
+    dataSetUrn: urn:dv:dataset:90244889-d1bf-4f87-a046-160928e08bd0
+    entity:
+      path: s3://dp-input-bucket/mpay-tx/mpay-tx.csv
+      variables:
+        - key: timeStamp
+          value: date-YYYYMMdd
+      advanceOptions:
+        delimiter: ','
+        header: true
+productState:
+  refreshInterval: "*/10 * * * *"
+  updateStrategy: append
+  logicalSchema:
+    properties:
+      id:
+        type: number
+      name:
+        type: String
+      marks:
+        type: number
+      modified:
+        type: datetime
 transformation:
-  sql: SELECT AVG(rent_price), house_type_id
-    FROM usersS3
-    GROUP BY house_type_id
+  - alias: Test_input_port_trans
+    description: step_1
+    type: SQL
+    sequenceNo: '1'
+    query: SELECT * FROM Test_input_port
+    references:
+      - alias: Test_input_port
+        sqlReference: Test_input_port        
 outputPort:
-  channels:
-  - channelType: REST-API
-    queryType: SQL
-  - channelType: JDBC
-    queryType: SQL 
+  subscriptionChannels:
+    - channelType: JDBC
+      queryType: SQL
+controlPort:
+  dataQualityCheck:
+    RecordCountCheck:
+      inputPort:
+        - referenceAlias: Test_input_port
+          expression: ">="
+          number: 100
+      productState:
+        referenceAlias: Test0001_input_port
+        expression: ==
+        number: 100
+    NullValueCheck:
+      inputPort:
+        - referenceAlias: Test_input_port
+          checks:
+            - column: amount
+              expression: ">="
+              number: 9
+            - column: payment_option
+              expression: ">="
+              number: 8
+      productState:
+        referenceAlias: Test0001_input_port
+        checks:
+          - column: amount
+            expression: ">="
+            number: 0.9
+    NullCombinationCheck:
+      productState:
+        referenceAlias: Test0001_input_port
+        checks:
+          - columns:
+              - transaction_reference
+              - order_reference
+            expression: ">="
+            number: 0.99
+    UnacceptableTextValueCheck:
+      inputPort:
+        - referenceAlias: Test_input_port
+          checks:
+            - column: payment_option
+              valueList:
+                - VISA
+                - MASTERCARD
+              number: 0.95
+              expression: ">="
+      productState:
+        referenceAlias: Test0001_input_port
+        checks:
+          - column: payment_option
+            valueList:
+              - MASTERCARD
+              - VISA
+            number: 0.9
+            expression: ">="
+    UniquenessCheck:
+      inputPort:
+        - referenceAlias: Test_input_port
+          checks:
+            - column: store_group_name
+            - column: store_name
+    UniqueCombinationCheck:
+      inputPort:
+        - referenceAlias: Test_input_port
+          checks:
+            - columns:
+                - store_name
+                - transaction_Reference
+      productState:
+        referenceAlias: Test0001_input_port
+        checks:
+          - columns:
+              - store_name
+              - transaction_Reference
+    DistinctValueCountCheck:
+      inputPort:
+        - referenceAlias: Test_input_port
+          checks:
+            - column: payment_option
+              number: 2
+              expression: "<="
+      productState:
+        referenceAlias: Test0001_input_port
+        checks:
+          - column: payment_option
+            number: 2
+            expression: "<="
