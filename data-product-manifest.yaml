@@ -1,8 +1,8 @@
 ---
 version: 0.1.0
-alias: latest_manifest_file_testing_31_May_test1
+alias: latest_manifest_file_testing_1_June_test2
 discoveryPort:
-  name: Run data product test for latest changes Shubham V
+  name: Run data product test for latest changes June 1 Test 1 shubham
   alias: Test_schedule_run
   shortDescription: Weather Forecast of the next 7 days for ahmedabad city
   longDescription: Weather Forecast of the next 7 days for ahmedabad city along with the accuracy of the previous forecast
@@ -34,7 +34,7 @@ inputPorts:
           value: date-YYYYMMdd
       advanceOptions:
         delimiter: ','
-        header: true
+        header: string
 productState:
   refreshInterval: "*/10 * * * *"
   updateStrategy: append
